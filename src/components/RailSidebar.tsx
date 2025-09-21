@@ -48,7 +48,7 @@ export function RailSidebar() {
           </div>
           {state !== "collapsed" && (
             <div>
-              <h2 className="text-lg font-bold text-foreground">RailMargDarshi</h2>
+              <h2 className="text-lg font-bold text-foreground">railMargDarshi</h2>
               <p className="text-xs text-muted-foreground">AI Traffic Control</p>
             </div>
           )}
