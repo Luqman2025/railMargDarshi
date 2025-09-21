@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusIndicator } from "@/components/ui/status-indicator";
+import RailwayMap from "@/components/RailwayMap";
 import { 
   Train, 
   Cloud, 
@@ -125,63 +126,16 @@ export default function Dashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="relative h-96 bg-muted/20 rounded-lg overflow-hidden">
-              {/* Simulated Map Background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-muted/10 via-background to-muted/20"></div>
-              
-              {/* Railway Lines */}
-              <svg className="absolute inset-0 w-full h-full">
-                <line x1="10%" y1="30%" x2="90%" y2="60%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" />
-                <line x1="20%" y1="10%" x2="70%" y2="90%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" />
-                <line x1="30%" y1="40%" x2="80%" y2="20%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" />
-              </svg>
-              
-              {/* Train Positions */}
-              {trains.map((train) => (
-                <div
-                  key={train.id}
-                  className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform"
-                  style={{ left: `${train.x}%`, top: `${train.y}%` }}
-                  onClick={() => handleTrainClick(train.id)}
-                  onMouseEnter={() => setSelectedTrain(train.id)}
-                  onMouseLeave={() => setSelectedTrain(null)}
-                >
-                  <div className="relative">
-                    <Train 
-                      className={`w-6 h-6 ${
-                        train.status === 'green' ? 'text-signal-green' :
-                        train.status === 'yellow' ? 'text-signal-yellow' : 'text-signal-red'
-                      }`} 
-                    />
-                    <StatusIndicator
-                      status={train.status as "red" | "yellow" | "green"}
-                      size="sm"
-                      className="absolute -top-1 -right-1"
-                      animated={train.status === 'red'}
-                    />
-                  </div>
-                  
-                  {selectedTrain === train.id && (
-                    <div className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-card border border-border rounded-lg p-2 shadow-lg z-10 whitespace-nowrap">
-                      <p className="text-sm font-medium">{train.name}</p>
-                      <p className="text-xs text-muted-foreground">{train.route}</p>
-                      {train.delay > 0 && (
-                        <p className="text-xs text-signal-red">Delayed: {train.delay} min</p>
-                      )}
-                    </div>
-                  )}
+            <RailwayMap onTrainClick={handleTrainClick} />
+            
+            {/* Weather Overlay */}
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              {weatherData.map((weather, index) => (
+                <div key={index} className="flex items-center gap-2 bg-card border border-border rounded-lg p-2 text-xs">
+                  <weather.icon className={`w-4 h-4 ${weather.color}`} />
+                  <span className="truncate">{weather.location}</span>
                 </div>
               ))}
-              
-              {/* Weather Overlay */}
-              <div className="absolute top-4 right-4 space-y-2">
-                {weatherData.map((weather, index) => (
-                  <div key={index} className="flex items-center gap-2 bg-card/80 backdrop-blur-sm rounded-lg p-2 text-xs">
-                    <weather.icon className={`w-4 h-4 ${weather.color}`} />
-                    <span>{weather.location}: {weather.type}</span>
-                  </div>
-                ))}
-              </div>
             </div>
           </CardContent>
         </Card>
